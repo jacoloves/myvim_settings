@@ -40,7 +40,7 @@ set wildmenu
 " 自動インデント
 set autoindent
 " インデント幅
-set shiftwidth=2
+set shiftwidth=4
 " タブキーの挿入文字数を指定
 set softtabstop=2
 " カッコを補完する
@@ -52,6 +52,20 @@ inoremap " ""<LEFT>
 inoremap ' ''<LEFT>
 
 hi Comment ctermfg=gray
+
+" windows用clipboard
+let g:clipboard = {
+            \   'name': 'myClipboard',
+            \   'copy': {
+            \       '+': 'win32yank.exe -i',
+            \       '*': 'win32yank.exe -i',
+            \   },
+            \   'paste': {
+            \       '+': 'win32yank.exe -o',
+            \       '*': 'win32yank.exe -o',
+            \   },
+            \   'cache_enabled': 1,
+            \}
 
 if has('mouse')
   set mouse=a
@@ -66,6 +80,13 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#begin('~/.config/nvim/dein')
 
   call dein#load_toml('~/.config/nvim/dein.toml', {'lazy': 0})
+
+
+  if has('win32') || has('win64')
+    call dein#add('tbodt/deoplete-tabnine', { 'build': 'powershell.exe .\install.ps1' })
+  else
+    call dein#add('tbodt/deoplete-tabnine', { 'build': './install.sh' })
+  endif
 
   call dein#end()
   call dein#save_state()
@@ -90,8 +111,6 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
 " Enable snipMate compatibility feature.
 let g:neosnippet#enable_snipmate_compatibility = 1
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/neosnippet-snippets/neosnippets'
 
 " For conceal markers.
 if has('conceal')
@@ -109,3 +128,11 @@ endif
 
 " Golang Auto import
 let g:go_fmt_command = "goimports"
+
+" Rust fmt auto
+let g:rustfmt_autosave = 1
+
+" windows key bind
+nnoremap <C-q><C-v>
+" cmap <C-v><C-v>
+
